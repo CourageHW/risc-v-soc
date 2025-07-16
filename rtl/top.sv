@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+import core_pkg::*;
+
 module top (
   input logic clk,
   input logic rst_n
@@ -7,8 +9,9 @@ module top (
 
 
   riscv_core #(
-    .DATA_WIDTH(),
-    .ADDR_WIDTH()
+    .DATA_WIDTH(DATA_WIDTH),
+    .INST_MEM_ADDR_WIDTH(INST_MEM_ADDR_WIDTH),
+    .DATA_MEM_ADDR_WIDTH(DATA_MEM_ADDR_WIDTH)
   ) u_riscv_core (
     .i_clk(clk),
     .i_rst_n(rst_n),
@@ -25,8 +28,8 @@ module top (
   );
 
   ram #(
-    .DATA_WIDTH(),
-    .ADDR_WIDTH()
+    .DATA_WIDTH(DATA_WIDTH),
+    .ADDR_WIDTH(DATA_MEM_ADDR_WIDTH)
   ) u_data_memory (
     .i_clk(clk),
     .i_we(),
@@ -36,8 +39,8 @@ module top (
   );
 
   rom #(
-    .DATA_WIDTH(),
-    .ADDR_WIDTH()
+    .DATA_WIDTH(DATA_WIDTH),
+    .ADDR_WIDTH(INST_MEM_ADDR_WIDTH)
   ) u_instruction_memory (
     .i_clk(clk),
     .i_addr(),

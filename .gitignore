@@ -1,0 +1,11 @@
+# Vivado generated files
+vivado_sim_project/
+.Xil/
+*.log
+*.jou
+*.wdb
+*.pb
+webtalk.*
+
+# Editor configuration
+.nvim/
