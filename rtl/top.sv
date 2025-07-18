@@ -21,6 +21,7 @@ module top (
 
   riscv_core #(
     .DATA_WIDTH(DATA_WIDTH),
+    .REG_MEM_ADDR_WIDTH(REG_MEM_ADDR_WIDTH),
     .INST_MEM_ADDR_WIDTH(INST_MEM_ADDR_WIDTH),
     .DATA_MEM_ADDR_WIDTH(DATA_MEM_ADDR_WIDTH)
   ) u_riscv_core (

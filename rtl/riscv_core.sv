@@ -2,6 +2,7 @@
 
 module riscv_core #(
   parameter DATA_WIDTH = 32,
+  parameter REG_MEM_ADDR_WIDTH = 5,
   parameter INST_MEM_ADDR_WIDTH = 12,
   parameter DATA_MEM_ADDR_WIDTH = 12
 ) (
@@ -25,8 +26,10 @@ module riscv_core #(
   // ===============================================
   
 
-  logic [DATA_WIDTH-1:0] IF1_pc_w, IF2_pc_w;
-  logic [DATA_WIDTH-1:0] IF1_pc_plus4_w, IF2_pc_plus4_w;
+  logic [DATA_WIDTH-1:0] IF1_pc_w, IF2_pc_w, ID_pc_w;
+  logic [DATA_WIDTH-1:0] IF1_pc_plus4_w, IF2_pc_plus4_w, 
+                         ID_pc_plus4_w;
+  logic [DATA_WIDTH-1:0] IF2_instruction_w, ID_instruction_w;
   
   // [1] Instruction Fetch Stage (IF1)
   if_stage #(
@@ -52,5 +55,27 @@ module riscv_core #(
     .pc_plus4_i(IF1_pc_plus4_w),
     .pc_o(IF2_pc_w),
     .pc_plus4_o(IF2_pc_plus4_w)
+  );
+
+  if2id_reg #(
+    .DATA_WIDTH(DATA_WIDTH)
+  ) if2id_inst (
+    .clk(i_clk),
+    .rst_n(i_rst_n),
+    .pc_i(IF2_pc_w),
+    .pc_plus4_i(IF2_pc_plus4_w),
+    .instruction_i(IF2_instruction_w),
+    .pc_o(ID_pc_w),
+    .pc_plus4_o(ID_pc_plus4_w),
+    .instruction_o(ID_instruction_w)
+  );
+
+  id_stage #(
+    .DATA_WIDTH(DATA_WIDTH),
+    .REG_MEM_ADDR_WIDTH(REG_MEM_ADDR_WIDTH)
+  ) u_id_inst (
+    .pc_i(ID_pc_w),
+    .pc_plus4_i(ID_pc_plus4_w),
+    .instruction_i(ID_instruction_w)
   );
 endmodule
