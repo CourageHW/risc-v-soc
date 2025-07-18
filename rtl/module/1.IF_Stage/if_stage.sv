@@ -7,7 +7,8 @@ module if_stage #(
   input logic rst_n,
   input logic pc_we,
 
-  output logic [DATA_WIDTH-1:0] pc_o
+  output logic [DATA_WIDTH-1:0] pc_o,
+  output logic [DATA_WIDTH-1:0] pc_plus4_o
 );
 
   logic [DATA_WIDTH-1:0] pc_w;
@@ -23,4 +24,6 @@ module if_stage #(
   );
 
   assign pc_w = pc_o + 32'd4;
+
+  assign pc_plus4_o = pc_w;
 endmodule

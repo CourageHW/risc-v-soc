@@ -9,14 +9,14 @@ module riscv_core #(
   input logic i_rst_n,
 
   // instruction memory ports [2] (IF2)
-  input  logic [DATA_WIDTH-1:0] i_rdata_inst,
-  output logic [ADDR_WIDTH-1:0] o_addr_inst,
+  input  logic [DATA_WIDTH-1:0]          i_rdata_inst,
+  output logic [INST_MEM_ADDR_WIDTH-1:0] o_addr_inst,
 
   // data memory ports [5] (MEM)
-  input  logic [DATA_WIDTH-1:0] i_rdata_mem,
-  output logic [DATA_WIDTH-1:0] o_wrdata_mem,
-  output logic [ADDR_WIDTH-1:0] o_addr_mem,
-  output logic                  o_we_mem
+  input  logic [DATA_WIDTH-1:0]          i_rdata_mem,
+  output logic [DATA_WIDTH-1:0]          o_wrdata_mem,
+  output logic [DATA_MEM_ADDR_WIDTH-1:0] o_addr_mem,
+  output logic                           o_we_mem
 );
 
 
@@ -25,36 +25,32 @@ module riscv_core #(
   // ===============================================
   
 
-  logic [DATA_WIDTH-1:0] IF1_pc_w;
+  logic [DATA_WIDTH-1:0] IF1_pc_w, IF2_pc_w;
+  logic [DATA_WIDTH-1:0] IF1_pc_plus4_w, IF2_pc_plus4_w;
   
   // [1] Instruction Fetch Stage (IF1)
-  IF_stage #(
+  if_stage #(
     .DATA_WIDTH(DATA_WIDTH)
   ) u_if_stage (
     .clk(i_clk),
     .rst_n(i_rst_n),
     .pc_we(1'b1),
-    .pc_o(IF1_pc_w)
+    .pc_o(IF1_pc_w),
+    .pc_plus4_o(IF1_pc_plus4_w)
   );
 
   assign o_addr_inst = IF1_pc_w[INST_MEM_ADDR_WIDTH-1:2];
 
-  IF2ID_reg u_if2id_reg (
-
+  // [2] Instruction Fetch Stage (IF2)
+  // for instruction memory delay
+  if_stage2 #(
+    .DATA_WIDTH(DATA_WIDTH)
+  ) u_if_stage2 (
+    .clk(i_clk),
+    .rst_n(i_rst_n),
+    .pc_i(IF1_pc_w),
+    .pc_plus4_i(IF1_pc_plus4_w),
+    .pc_o(IF2_pc_w),
+    .pc_plus4_o(IF2_pc_plus4_w)
   );
-
-  // [3] Instruction Decode Stage
-  ID_stage u_id_stage (
-
-  );
-
-  ID2EX_reg u_id2ex_reg (
-
-  );
-
-  // [4] Execute Stage
-  
-
-  // [6] Writer Back Stage
-
 endmodule
