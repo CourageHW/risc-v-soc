@@ -26,10 +26,13 @@ add_files -fileset sim_1 [list \
   ./rtl/module/1.IF_Stage/if_stage.sv \
   ./rtl/module/1.IF_Stage/if_stage2.sv \
   ./rtl/module/1.IF_Stage/program_counter.sv \
+  ./rtl/module/2.ID_Stage/id_stage.sv \
+  ./rtl/module/2.ID_Stage/register_file.sv \
   ./rtl/riscv_core.sv \
   ./rtl/top.sv \
   ./tb/tb_if_stage.sv \
   ./tb/tb_if_ram_test.sv \
+  ./tb/tb_register_file.sv \
 ]
 
 add_files -fileset sim_1 -norecurse [list \
@@ -38,7 +41,7 @@ add_files -fileset sim_1 -norecurse [list \
 
 # --- 3. Set Compile Order ---
 # Explicitly set the defines package to be compiled first.
-set_property top tb_if_ram_test [get_filesets sim_1]
+set_property top tb_register_file [get_filesets sim_1]
 update_compile_order -fileset sim_1
 
 
